@@ -1,0 +1,104 @@
+---
+title: "DATA607_HW4"
+author: "Gabriel Santos"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r readdb}
+majorDS <- read.csv(file="https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/majors-list.csv",header = TRUE, sep=",") 
+```
+
+
+#### *1.Using the 173 majors listed in fivethirtyeight.com’s College Majors dataset [https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/], provide code that identifies the majors that contain either "DATA" or "STATISTICS"*
+
+
+```{r E1}
+key='DATA|STATISTICS'
+majorDnS <- majorDS$Major[grep(key, majorDS$Major)]
+majorDnS
+```
+
+
+#### *2.Write code that transforms the data below:*
+
+
+[1] "bell pepper"  "bilberry"     "blackberry"   "blood orange"
+[5] "blueberry"    "cantaloupe"   "chili pepper" "cloudberry"  
+[9] "elderberry"   "lime"         "lychee"       "mulberry"    
+[13] "olive"        "salal berry"
+Into a format like this:
+c("bell pepper", "bilberry", "blackberry", "blood orange", "blueberry", "cantaloupe", "chili pepper", "cloudberry", "elderberry", "lime", "lychee", "mulberry", "olive", "salal berry")
+Using the 173 majors listed in fivethirtyeight.com’s College Majors dataset [https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/], provide code that identifies the majors that contain either "DATA" or "STATISTICS"
+
+```{r E2}
+fruitDF <- data.frame(c("bell pepper", "bilberry", "blackberry", "blood orange", "blueberry", "cantaloupe", "chili pepper", "cloudberry", "elderberry", "lime", "lychee", "mulberry", "olive", "salal berry"))
+cat(paste(fruitDF), collapse=",")
+```
+
+
+#### *3.Describe, in words, what these expressions will match:*
+
+
+* (.)\1\1
+* "(.)(.)\\\2\\\1"
+* (..)\1
+* "(.).\\\1.\\\1"
+* "(.)(.)(.).*\\\3\\\2\\\1"
+    
+
+  + Any 3 same characters that next to each other.
+  + Matching any 2 character and they in reverse order. 
+  + Repeat any 2 characters. 
+  + Any character 3 times and must be separated by one character. 
+  + Matching any 3 character and they in reverse order.
+
+
+```{r E3 }
+library("stringr")
+exampleDS <-c("lool", "aa", "aaa", "aaaa", "is is", "aa", "lolol", "abccba", "abcddcba", "aaaalaaa", "aaaaaal", "aaaaaa", "abccab", "abb", "aba", "awww")
+#(.)\1\1"
+expression ="(.)\\1\\1"
+result <- str_subset(exampleDS,expression)
+result
+#"(.)(.)\\2\\1"
+expression ="(.)(.)\\2\\1"
+result <- str_subset(exampleDS,expression )
+result
+#"(..)\1"
+expression ="(..)\\1"
+result <- str_subset(exampleDS,expression )
+result
+#(.).\\1.\\1"
+expression ="(.).\\1.\\1"
+result <- str_subset(exampleDS,expression )
+result
+#"(.)(.)(.).*\\3\\2\\1"
+expression ="(.)(.)(.).*\\3\\2\\1"
+result <- str_subset(exampleDS,expression )
+result
+```
+
+
+#### *4. Construct regular expressions to match words that:*
+
+
+  - Start and end with the same character.
+  - Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+  - Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+
+```{r E4 }
+sampleDS <-c("eye", "dad", "mom", "prep", "lateral", "pulp", "pop", "madam", "treat", "tent", "essence", "nose", "stress" , "high" , "tall", "call", "zeus", "church", "chicken", "chocolate", "banana", "lululemon")
+#Start and end with the same character.
+expression ="^(.)(.*\\1$)"
+result <- str_subset(sampleDS,expression )
+result
+#Contain a repeated pair of letters (e.g. "church" contains "ch" repeated twice.)
+expression="([A-Za-z][A-Za-z]).*\\1"
+result <- str_subset(sampleDS,expression )
+result
+#Contain one letter repeated in at least three places (e.g. "eleven" contains three "e"s.)
+expression="([A-Za-z]).*\\1.*\\1"
+result <- str_subset(sampleDS,expression )
+result
+```
